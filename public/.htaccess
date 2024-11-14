@@ -1,0 +1,54 @@
+<IfModule mod_rewrite.c>
+
+    <IfModule mod_negotiation.c>
+
+        Options -MultiViews -Indexes
+
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+
+    RewriteCond %{HTTP:Authorization} .
+
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteCond %{REQUEST_URI} (.+)/$
+
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+
+    RewriteRule ^ index.php [L]
+
+    # Direct all requests to /public folder
+    RewriteCond %{REQUEST_URI} !/public
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # Direct all requests to pretty url
+    RewriteCond %{THE_REQUEST} ^.*/index\.php
+    RewriteRule ^(.*)index.php$ /$1 [R=301,L]
+
+    # Disable Directory listing
+    Options -Indexes
+
+    # Allow images to be accessed
+    RewriteRule \.(jpg|jpeg|png|gif)$ - [L]
+
+    # block files which needs to be hidden, specify .example extension of the file
+    <Files ~ "\.(env|config.js|md|gitignore|gitattributes|lock)$">
+        Order allow,deny
+        Deny from all
+    </Files>
+
+</IfModule>
+

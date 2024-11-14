@@ -1,0 +1,38 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect all requests to the public folder
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # Redirect all requests to the pretty URL
+    RewriteCond %{THE_REQUEST} \s/+public/([^\s?]+) [NC]
+    RewriteRule ^ /%1 [L,R=301]
+
+    # Prevent access to .env files
+    RewriteRule ^(.+)\.env - [R=404,L]
+
+    # Disable directory listing
+    Options -Indexes
+</IfModule>
+
+# Allow access to image files
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+#disable directory browsing
+Options -Indexes
+
+#PROTECT ENV FILE
+<Files .env>
+order allow,deny
+Deny from all
+</Files>
+
+#PROTECT ENV FILE
+<Files .htaccess>
+order allow,deny
+Deny from all
+</Files>
